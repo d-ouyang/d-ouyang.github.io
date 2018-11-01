@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="javascript,JQuery,内存,作用域,作用域链,闭包,变量对象,执行环境," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="咸鱼的自省之前都不会去深究 js 数据内部的一些具体的情况，不知其原理和运行规律，只会写一写死代码。知道深入了解后才发现自己之前和咸鱼没啥区别。 栈内存与堆内存js 并没有严格意义上的区分栈内存与堆内存，但是仍可以以堆栈数据结构的思路进行处理。在此会涉及到执行环境、作用域、作用域链、垃圾回收机制、闭包等各种知识，可能会揉起来讲，只是用内存管理抛砖引玉，因为我认为他们之间的关系并不是独立的。书上之所">
+<meta name="keywords" content="javascript,JQuery,内存,作用域,作用域链,闭包,变量对象,执行环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 深度理解">
+<meta property="og:url" content="http://d-ouyang.github.io/2017/06/05/JavaScript-深度理解/index.html">
+<meta property="og:site_name" content="欧 阳">
+<meta property="og:description" content="咸鱼的自省之前都不会去深究 js 数据内部的一些具体的情况，不知其原理和运行规律，只会写一写死代码。知道深入了解后才发现自己之前和咸鱼没啥区别。 栈内存与堆内存js 并没有严格意义上的区分栈内存与堆内存，但是仍可以以堆栈数据结构的思路进行处理。在此会涉及到执行环境、作用域、作用域链、垃圾回收机制、闭包等各种知识，可能会揉起来讲，只是用内存管理抛砖引玉，因为我认为他们之间的关系并不是独立的。书上之所">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://d-ouyang.github.io/2017/06/05/JavaScript-深度理解/blog2.png">
+<meta property="og:image" content="http://d-ouyang.github.io/2017/06/05/JavaScript-深度理解/blog1.png">
+<meta property="og:image" content="http://d-ouyang.github.io/2017/06/05/JavaScript-深度理解/blog0.png">
+<meta property="og:updated_time" content="2018-11-01T08:15:25.284Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 深度理解">
+<meta name="twitter:description" content="咸鱼的自省之前都不会去深究 js 数据内部的一些具体的情况，不知其原理和运行规律，只会写一写死代码。知道深入了解后才发现自己之前和咸鱼没啥区别。 栈内存与堆内存js 并没有严格意义上的区分栈内存与堆内存，但是仍可以以堆栈数据结构的思路进行处理。在此会涉及到执行环境、作用域、作用域链、垃圾回收机制、闭包等各种知识，可能会揉起来讲，只是用内存管理抛砖引玉，因为我认为他们之间的关系并不是独立的。书上之所">
+<meta name="twitter:image" content="http://d-ouyang.github.io/2017/06/05/JavaScript-深度理解/blog2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://d-ouyang.github.io/2017/06/05/JavaScript-深度理解/"/>
+
+
+
+
+
+  <title>JavaScript 深度理解 | 欧 阳</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">欧 阳</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">babysbreath</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://d-ouyang.github.io/2017/06/05/JavaScript-深度理解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ouy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欧 阳">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JavaScript 深度理解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-05T16:49:11+08:00">
+                2017-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/前端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">前端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="咸鱼的自省"><a href="#咸鱼的自省" class="headerlink" title="咸鱼的自省"></a>咸鱼的自省</h4><p><em>之前都不会去深究 js 数据内部的一些具体的情况，不知其原理和运行规律，只会写一写死代码。知道深入了解后才发现自己之前和咸鱼没啥区别</em>。</p>
+<h4 id="栈内存与堆内存"><a href="#栈内存与堆内存" class="headerlink" title="栈内存与堆内存"></a>栈内存与堆内存</h4><p>js 并没有严格意义上的区分栈内存与堆内存，但是仍可以以堆栈数据结构的思路进行处理。在此会涉及到<strong>执行环境、作用域、作用域链、垃圾回收机制、闭包</strong>等各种知识，可能会揉起来讲，只是用内存管理抛砖引玉，因为我认为他们之间的关系并不是独立的。书上之所以会分开讲是因为每一节的侧重点不一样而已。</p>
+<h5 id="栈（stack）"><a href="#栈（stack）" class="headerlink" title="栈（stack）"></a>栈（stack）</h5><p>很多博主都对栈的存取方式进行了形象的类比，如乒乓球、羽毛球的存取方式，即栈空间<strong>先进后出，后进先出</strong>的特点。</p>
+<img src="/2017/06/05/JavaScript-深度理解/blog2.png" title="栈空间类比"> 
+<p>后面的函数运行时给以很好的解释这种特性，典型的就是<strong>递归</strong>。</p>
+<h5 id="堆（heap）"><a href="#堆（heap）" class="headerlink" title="堆（heap）"></a>堆（heap）</h5><p>对于堆的存取方式的类比为书架上的书，存取数据并不会受先后书序的影响。</p>
+<img src="/2017/06/05/JavaScript-深度理解/blog1.png" title="变量对象和堆内存空间"> 
+<h5 id="个人理解："><a href="#个人理解：" class="headerlink" title="个人理解："></a>个人理解：</h5><p>一开始，栈中的数据本身是不存在先后顺序的，他们是一群有固定大小的值，游离在栈空间中，程序员可以直接使用。在程序员没有声明变量时（即没有给对应的值取名时），是没有变量名的一些值。一旦程序员给这些值取了名字，如上图 2 ，这些值就成了有名字的变量对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span> <span class="comment">// 1 : 即 栈内存中的数据 1 对应的名字为 a</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">1</span><span class="comment">// 1 : 即 栈内存中的数据 1 对应的名字为 b</span></span><br><span class="line"><span class="comment">// 在程序中，a、b、1 都可被程序员直接使用，都代表的是 1。</span></span><br><span class="line"><span class="comment">// 说明栈内数据值虽然固定，但对应的名字是程序员来控制，可以是一对多的映射，但名对值得映射只能是一对一，如下：</span></span><br><span class="line"> b = <span class="number">10</span> <span class="comment">// 10 : 程序员把名字 b 赋予给了值 10，同时 1 已不能被 b 所表示，b 只能代表 10</span></span><br><span class="line"><span class="comment">// 在程序中， b、10 都可以被程序员直接使用。</span></span><br><span class="line"><span class="comment">// 而且，虽然 b 声明在 a 之后，但在使用时仍可先取 b 的值并使用，并不遵循栈空间先进后出，后进先出的特点。所以入栈和出栈并不是在声明的时候确定，而是在使用时确定（其实一开始是全局上下文入栈，先抛开此栈不说）。在使用时，上面的变量对象就会变成活动对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 特别注意：</span></span><br><span class="line"><span class="keyword">var</span> i</span><br><span class="line"><span class="built_in">console</span>.log(i) <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">10</span></span><br><span class="line"><span class="keyword">var</span> i</span><br><span class="line"><span class="built_in">console</span>.log(i) <span class="comment">// 10</span></span><br><span class="line"><span class="keyword">var</span> i = <span class="literal">undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(i) <span class="comment">// undefined</span></span><br><span class="line"><span class="comment">// 虽然 var 一个变量不给值所打印出来的结果为 undefined，但与直接把 undefined 赋值给这个变量有区别，后者可以重写变量，前者不可以</span></span><br></pre></td></tr></table></figure>
+<p>而栈数据的存取特点一般在函数中可以很直观的得以体现，即产生上<strong>下文执行环境</strong>时。下面的例子很好的说明栈空间先进后出，后进先出的特点。</p>
+<p><strong>例 1：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">i</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'begin:'</span> + i);</span><br><span class="line">    foo(i - <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'end:'</span> + i);</span><br><span class="line">&#125;</span><br><span class="line">foo(<span class="number">2</span>);</span><br><span class="line"><span class="comment">// 打印结果：</span></span><br><span class="line">begin:<span class="number">2</span></span><br><span class="line">begin:<span class="number">1</span></span><br><span class="line">begin:<span class="number">0</span></span><br><span class="line">end:<span class="number">0</span></span><br><span class="line">end:<span class="number">1</span></span><br><span class="line">end:<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p><strong>分析：</strong></p>
+<p>执行 foo(2) 时，产生一个上下文环境（已入栈开始，出栈结束），以 2 入栈， foo(2) 在栈底；</p>
+<p>当执行到 foo(i - 1) 时，产生一个新的上下文环境（新栈），以 1 入栈，foo(1)  在第二层，栈底以 2 入栈但并未出栈；</p>
+<p>当再次执行到 foo(i - 1) 时，又产生一个新的上下文环境（新栈），以 0 入栈，foo(0)  在第三层，第二层以 1 入栈但并未出栈；</p>
+<p>以此推，当再次执行到foo(i - 1) 时，又产生一个新的上下文环境（新栈），以 -1 入栈，foo(-1)  在第四层，但在执行 return 语句时结束上下文环境出栈，第三层暴露在栈顶，执行未完成语句 console.log(‘end:’ + i)</p>
+<p>第三层执行完毕后出栈，第二层暴露在栈顶，执行未完成语句 console.log(‘end:’ + i)</p>
+<p>以此推，直到栈底  foo(2)  执行完最后一条语句 console.log(‘end:’ + i) 出栈，结束。</p>
+<p>不明白，看图：</p>
+<img src="/2017/06/05/JavaScript-深度理解/blog0.png" title="执行流程图"> 
+<p><strong>例2：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num = <span class="number">5</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">star</span> (<span class="params">num</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (num &gt; <span class="number">3</span>) &#123;</span><br><span class="line">        star(--num)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(num)</span><br><span class="line">&#125;</span><br><span class="line">star(num)</span><br><span class="line"><span class="comment">// 打印结果：3, 3, 4</span></span><br></pre></td></tr></table></figure>
+<h5 id="分析："><a href="#分析：" class="headerlink" title="分析："></a><strong>分析：</strong></h5><p>这个分析用更笨的方式还原，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">star(num) <span class="comment">// 执行后</span></span><br><span class="line">====================</span><br><span class="line"><span class="keyword">var</span> num = <span class="number">5</span> </span><br><span class="line"><span class="keyword">if</span> (num &gt; <span class="number">3</span>) &#123; <span class="comment">// num = 5 入栈 栈底(第一层)</span></span><br><span class="line">    num = num - <span class="number">1</span> <span class="comment">// num = 4 栈底(第一层)</span></span><br><span class="line">    <span class="keyword">if</span> (num &gt; <span class="number">3</span>) &#123; <span class="comment">// num = 4 入栈 第二层</span></span><br><span class="line">		num = num - <span class="number">1</span> <span class="comment">// num = 3 第二层</span></span><br><span class="line">        <span class="keyword">if</span> (num &gt; <span class="number">3</span>) &#123; <span class="comment">// num = 3 入栈 第三层</span></span><br><span class="line">           <span class="comment">// 因为不满足条件，无法进入 if 语句内部建立新栈，则继续执行第三层可执行语句</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(num) <span class="comment">// num = 3 出栈 第三层结束</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(num) <span class="comment">// num = 3 出栈 第二层结束</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(num) <span class="comment">// num = 4 出栈 栈底（第一层）结束</span></span><br><span class="line"><span class="comment">// 所以打印结果为 3, 3, 4</span></span><br><span class="line"><span class="comment">// 由此可见，js 的执行是单线程的</span></span><br></pre></td></tr></table></figure>
+<p><strong>例 3：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> n = <span class="number">999</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(n+=<span class="number">1</span>); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f2;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'n：'</span> + n)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> result = f1();</span><br><span class="line">result(); <span class="comment">// 1000</span></span><br></pre></td></tr></table></figure>
+<p><strong>分析：</strong></p>
+<p>上面是一个<strong>闭包</strong>的例子，从<strong>执行环境、作用域链和变量对象</strong>的角度来解析。</p>
+<p>执行 f1() 时便进入函数 f1 的<strong>执行环境</strong>，而这个环境都有一个与之相关联的<strong>变量对象</strong>，这个环境便被推到<strong>栈</strong>顶。</p>
+<p>代码在当前环境中执行时，<strong>变量对象</strong>都会生成一个<strong>作用域链</strong>，但<strong>作用域链</strong>包含的对象可能不止一个，在此插入一个例子来解释这些名词，如下：</p>
+<p><strong>例 3+：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'WAN'</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> other_name = <span class="string">'georgina'</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">swapName</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> tempName = other_name</span><br><span class="line">        other_name = name</span><br><span class="line">        name = tempName</span><br><span class="line">        <span class="comment">// 这里可以访问变量 tempName、other_name 和 name</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 这里可以访问变量 name 和 other_name</span></span><br><span class="line">    swapName()</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里可以访问变量name</span></span><br><span class="line">changeName()</span><br></pre></td></tr></table></figure>
+<p><strong>分析：</strong></p>
+<p>以上涉及三个执行环境：全局环境、changeName() 的局部环境和 swapName() 的局部环境。</p>
+<p>全局环境会产生一个<strong>变量对象</strong>，此对象包含变量 name 和函数 changeName()，它生成一个<strong>作用域链</strong>，这个<strong>作用域链</strong>只包含了全局环境产生的<strong>变量对象</strong>，在此执行环境中，这个<strong>变量对象</strong>在这个<strong>作用域链</strong>的最前端，可以理解为当前执行环境在栈顶。</p>
+<p>changeName() 的局部环境也会产生一个<strong>变量对象</strong>，包含变量 other_name 、函数 swapName()和默认对象 arguments（此对象不存在于全局环境中），它也生成一个<strong>作用域链</strong>，包含当<strong>前执行环境产生的变量对象</strong>和<strong>全局环境产生的变量对象</strong>。当 changeName() 执行时，当前执行环境被推至栈顶，当前环境的变量对象位于作用域链最前端。执行时，它会从当前变量对象中搜索变量名和函数名，如果搜索不到，则进入上一级的作用域链，以此类推，找到相关变量或函数立即停止搜索。</p>
+<p>同理，swapName() 的局部环境也会产生一个<strong>变量对象</strong>，包含变量 tempName 和默认对象 arguments，它也生成一个<strong>作用域链</strong>，不同的是这个<strong>作用域链</strong>包含三个<strong>变量对象</strong>：<strong>当前执行环境产生的变量对象</strong>、上一级 changeName() 的局部环境也会产生一个<strong>变量对象</strong>和<strong>全局环境产生的变量对象</strong>。</p>
+<p>以上例子中，局部环境在脱离执行环境时，变量对象中相应的变量将被<strong>解除引用</strong>（无法访问到这些变量了），而全局变量需要手动来解除。但解除值引用并不意味着释放了改值所占内存，它真正的作用是让这个值脱离执行环境，相当于做个标记以便被周期工作的垃圾收集器销毁并回收内存。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/JQuery/" rel="tag"># JQuery</a>
+          
+            <a href="/tags/内存/" rel="tag"># 内存</a>
+          
+            <a href="/tags/作用域/" rel="tag"># 作用域</a>
+          
+            <a href="/tags/作用域链/" rel="tag"># 作用域链</a>
+          
+            <a href="/tags/闭包/" rel="tag"># 闭包</a>
+          
+            <a href="/tags/变量对象/" rel="tag"># 变量对象</a>
+          
+            <a href="/tags/执行环境/" rel="tag"># 执行环境</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/28/数据类型/" rel="next" title="数据类型">
+                <i class="fa fa-chevron-left"></i> 数据类型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/21/充电桩项目总结/" rel="prev" title="充电桩项目总结">
+                充电桩项目总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="ouy" />
+            
+              <p class="site-author-name" itemprop="name">ouy</p>
+              <p class="site-description motion-element" itemprop="description">愿你三冬暖，愿你春不寒，愿你天黑有灯，下雨有伞，愿你一路有良人相伴。。。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/d-ouyang" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ouyang_d_tq@163.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#咸鱼的自省"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x54B8;&#x9C7C;&#x7684;&#x81EA;&#x7701;" class="headerlink" title="&#x54B8;&#x9C7C;&#x7684;&#x81EA;&#x7701;"></a>&#x54B8;&#x9C7C;&#x7684;&#x81EA;&#x7701;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#栈内存与堆内存"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x6808;&#x5185;&#x5B58;&#x4E0E;&#x5806;&#x5185;&#x5B58;" class="headerlink" title="&#x6808;&#x5185;&#x5B58;&#x4E0E;&#x5806;&#x5185;&#x5B58;"></a>&#x6808;&#x5185;&#x5B58;&#x4E0E;&#x5806;&#x5185;&#x5B58;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#栈（stack）"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#&#x6808;&#xFF08;stack&#xFF09;" class="headerlink" title="&#x6808;&#xFF08;stack&#xFF09;"></a>&#x6808;&#xFF08;stack&#xFF09;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#堆（heap）"><span class="nav-number">2.2.</span> <span class="nav-text"><a href="#&#x5806;&#xFF08;heap&#xFF09;" class="headerlink" title="&#x5806;&#xFF08;heap&#xFF09;"></a>&#x5806;&#xFF08;heap&#xFF09;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#个人理解："><span class="nav-number">2.3.</span> <span class="nav-text"><a href="#&#x4E2A;&#x4EBA;&#x7406;&#x89E3;&#xFF1A;" class="headerlink" title="&#x4E2A;&#x4EBA;&#x7406;&#x89E3;&#xFF1A;"></a>&#x4E2A;&#x4EBA;&#x7406;&#x89E3;&#xFF1A;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分析："><span class="nav-number">2.4.</span> <span class="nav-text"><a href="#&#x5206;&#x6790;&#xFF1A;" class="headerlink" title="&#x5206;&#x6790;&#xFF1A;"></a><strong>&#x5206;&#x6790;&#xFF1A;</strong></span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ouy</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
