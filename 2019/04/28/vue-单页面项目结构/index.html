@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="javascript,vue,router," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、问题 对于刚用 vue 框架写这种项目的新手来说会弄不清项目结构要怎么弄才能让路由条理足够清晰。因为最近碰到有人问我这个问题，便整理一下，希望能帮到刚接触的人。有过大型网站项目经验的人请忽略此文。  二、项目结构：1、网站 下面以思维导图的形式展现目录结构   2、结构说明及需求网站结构如图所示，下面会举例说明 注意：B 中的 a 和 C 中的 a 不是同一个页面  网站包含A、B、C、D 四">
+<meta name="keywords" content="javascript,vue,router">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue 单页面项目结构">
+<meta property="og:url" content="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/index.html">
+<meta property="og:site_name" content="欧 阳">
+<meta property="og:description" content="一、问题 对于刚用 vue 框架写这种项目的新手来说会弄不清项目结构要怎么弄才能让路由条理足够清晰。因为最近碰到有人问我这个问题，便整理一下，希望能帮到刚接触的人。有过大型网站项目经验的人请忽略此文。  二、项目结构：1、网站 下面以思维导图的形式展现目录结构   2、结构说明及需求网站结构如图所示，下面会举例说明 注意：B 中的 a 和 C 中的 a 不是同一个页面  网站包含A、B、C、D 四">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/website.png">
+<meta property="og:image" content="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/music.png">
+<meta property="og:image" content="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/project.png">
+<meta property="og:image" content="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/router.png">
+<meta property="og:updated_time" content="2019-04-28T16:56:52.133Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vue 单页面项目结构">
+<meta name="twitter:description" content="一、问题 对于刚用 vue 框架写这种项目的新手来说会弄不清项目结构要怎么弄才能让路由条理足够清晰。因为最近碰到有人问我这个问题，便整理一下，希望能帮到刚接触的人。有过大型网站项目经验的人请忽略此文。  二、项目结构：1、网站 下面以思维导图的形式展现目录结构   2、结构说明及需求网站结构如图所示，下面会举例说明 注意：B 中的 a 和 C 中的 a 不是同一个页面  网站包含A、B、C、D 四">
+<meta name="twitter:image" content="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/website.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/"/>
+
+
+
+
+
+  <title>vue 单页面项目结构 | 欧 阳</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">欧 阳</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">babysbreath</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://d-ouyang.github.io/2019/04/28/vue-单页面项目结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ouy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欧 阳">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">vue 单页面项目结构</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-28T22:30:39+08:00">
+                2019-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术/前端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">前端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一、问题"><a href="#一、问题" class="headerlink" title="一、问题"></a>一、问题</h4><blockquote>
+<p>对于刚用 vue 框架写这种项目的新手来说会弄不清项目结构要怎么弄才能让路由条理足够清晰。因为最近碰到有人问我这个问题，便整理一下，希望能帮到刚接触的人。有过大型网站项目经验的人请忽略此文。</p>
+</blockquote>
+<h4 id="二、项目结构："><a href="#二、项目结构：" class="headerlink" title="二、项目结构："></a>二、项目结构：</h4><h5 id="1、网站"><a href="#1、网站" class="headerlink" title="1、网站"></a>1、网站</h5><blockquote>
+<p>下面以思维导图的形式展现目录结构</p>
+</blockquote>
+<img src="/2019/04/28/vue-单页面项目结构/website.png" title="网站结构">
+<h5 id="2、结构说明及需求"><a href="#2、结构说明及需求" class="headerlink" title="2、结构说明及需求"></a>2、结构说明及需求</h5><p>网站结构如图所示，下面会举例说明</p>
+<p><strong>注意：B 中的 a 和 C 中的 a 不是同一个页面</strong></p>
+<ul>
+<li><p>网站包含A、B、C、D 四个模块</p>
+</li>
+<li><p>其中 A 模块没有子模块，类似网站首页，没有二级页面</p>
+</li>
+<li><p>B 模块有 a、b、c、d 四个子模块，其中默认显示 B 下的 a 模块</p>
+<ul>
+<li>a 模块存在 b、c、d 三个模块的入口，但 b、c、d 没有互相跳转的入口（导航栏的二级下拉框中没有 a 的入口，因为点击 B 本身就显示的是 a 模块）</li>
+</ul>
+<blockquote>
+<p>可以把 B 想象成多功能模块，如 B 为「音乐排行榜」，默认显示 a，a 包含 b（新声榜）、c（说唱榜）、d（古典音乐榜）等等。不清楚可见如下网易月音乐的《全球榜》</p>
+</blockquote>
+<img src="/2019/04/28/vue-单页面项目结构/music.png" title="全球榜">
+</li>
+<li><p>C 模块有 a、b、c 三个模块，点击 C 默认显示 a 模块，a、b、c 可互相跳转，且页面都有各自入口（C 没有二级下拉菜单）</p>
+<blockquote>
+<p>可以把 C 想成登录成功后的「个人中心」，a（个人资料）、b（密码管理）、c（我的收藏）等</p>
+</blockquote>
+</li>
+<li><p>D 模块可以跳转到 C 模块</p>
+<blockquote>
+<p>C 模块若为「个人中心」，那么 D 模块就是「登录」模块，所以 C 和 D 只显示一个，未登录显示 D，登录成功后显示 C</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="三、代码项目结构"><a href="#三、代码项目结构" class="headerlink" title="三、代码项目结构"></a>三、代码项目结构</h4><blockquote>
+<p>项目结构以思维导图为例，项目结构如图所示：</p>
+</blockquote>
+<img src="/2019/04/28/vue-单页面项目结构/project.png" title="项目结构">
+<h4 id="四、路由配置"><a href="#四、路由配置" class="headerlink" title="四、路由配置"></a>四、路由配置</h4><blockquote>
+<p>路由配置以思维导图为例，配置如图所示：</p>
+</blockquote>
+<img src="/2019/04/28/vue-单页面项目结构/router.png" title="路由配置">
+<h4 id="五、注意事项"><a href="#五、注意事项" class="headerlink" title="五、注意事项"></a>五、注意事项</h4><blockquote>
+<p>上面的代码结构和路由配置中都有入口文件 index.vue，其中主要区别在 B 模块和 C 模块的 index.vue 中。</p>
+<p>B 模块的 index.vue 是一个空的入口文件，C 模块的 index.vue（充当了 B 模块中 a 模块的角色） 是带有 a、b、c 模块的路由入口</p>
+</blockquote>
+<p>很多时候，对于 B 模块中的 a 模块，因为存在去往 b、c、d 模块的入口，会误以为 a 模块和 b、c、d 模块是父子路由的关系，其实不是，这里他们是<strong>平级路由</strong>跳转关系。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/vue/" rel="tag"># vue</a>
+          
+            <a href="/tags/router/" rel="tag"># router</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/16/js-面向对象编程之继承/" rel="next" title="js 面向对象编程之继承">
+                <i class="fa fa-chevron-left"></i> js 面向对象编程之继承
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="ouy" />
+            
+              <p class="site-author-name" itemprop="name">ouy</p>
+              <p class="site-description motion-element" itemprop="description">愿你三冬暖，愿你春不寒，愿你天黑有灯，下雨有伞，愿你一路有良人相伴。。。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/d-ouyang" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:ouyang_d_tq@163.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、问题"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x4E00;&#x3001;&#x95EE;&#x9898;" class="headerlink" title="&#x4E00;&#x3001;&#x95EE;&#x9898;"></a>&#x4E00;&#x3001;&#x95EE;&#x9898;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、项目结构："><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x4E8C;&#x3001;&#x9879;&#x76EE;&#x7ED3;&#x6784;&#xFF1A;" class="headerlink" title="&#x4E8C;&#x3001;&#x9879;&#x76EE;&#x7ED3;&#x6784;&#xFF1A;"></a>&#x4E8C;&#x3001;&#x9879;&#x76EE;&#x7ED3;&#x6784;&#xFF1A;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、网站"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#1&#x3001;&#x7F51;&#x7AD9;" class="headerlink" title="1&#x3001;&#x7F51;&#x7AD9;"></a>1&#x3001;&#x7F51;&#x7AD9;</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、结构说明及需求"><span class="nav-number">2.2.</span> <span class="nav-text"><a href="#2&#x3001;&#x7ED3;&#x6784;&#x8BF4;&#x660E;&#x53CA;&#x9700;&#x6C42;" class="headerlink" title="2&#x3001;&#x7ED3;&#x6784;&#x8BF4;&#x660E;&#x53CA;&#x9700;&#x6C42;"></a>2&#x3001;&#x7ED3;&#x6784;&#x8BF4;&#x660E;&#x53CA;&#x9700;&#x6C42;</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、代码项目结构"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x4E09;&#x3001;&#x4EE3;&#x7801;&#x9879;&#x76EE;&#x7ED3;&#x6784;" class="headerlink" title="&#x4E09;&#x3001;&#x4EE3;&#x7801;&#x9879;&#x76EE;&#x7ED3;&#x6784;"></a>&#x4E09;&#x3001;&#x4EE3;&#x7801;&#x9879;&#x76EE;&#x7ED3;&#x6784;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、路由配置"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x56DB;&#x3001;&#x8DEF;&#x7531;&#x914D;&#x7F6E;" class="headerlink" title="&#x56DB;&#x3001;&#x8DEF;&#x7531;&#x914D;&#x7F6E;"></a>&#x56DB;&#x3001;&#x8DEF;&#x7531;&#x914D;&#x7F6E;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、注意事项"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x4E94;&#x3001;&#x6CE8;&#x610F;&#x4E8B;&#x9879;" class="headerlink" title="&#x4E94;&#x3001;&#x6CE8;&#x610F;&#x4E8B;&#x9879;"></a>&#x4E94;&#x3001;&#x6CE8;&#x610F;&#x4E8B;&#x9879;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ouy</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
